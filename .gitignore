@@ -103,3 +103,6 @@ built
 
 # TernJS port file
 .tern-port
+
+# MacOS BS
+.DS_Store
