@@ -18,7 +18,7 @@ npm install --global yarn
 Check that yarn is running
 ```
 yarn --version
-
+```
 # environment variables for local development at server root
 
 create a .env file with the following variables
