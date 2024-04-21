@@ -1,14 +1,15 @@
-import express from 'express'
 import * as dotenv from 'dotenv'
+import express from 'express'
 const app = express()
 dotenv.config({ path: `${process.cwd()}/.env` })
 
-import morgan from 'morgan'
 import cors from 'cors'
+import morgan from 'morgan'
+import { genericExpressErrorHandler } from './controllers/error'
 import actualsRoutes from './routes/testRoutes'
 import { runSampleJob } from './scheduledJobs'
-import { genericExpressErrorHandler } from './controllers/error'
 // import { authorizeRoute } from './controllers/auth';
+import { nodeEnv, port } from './config/envVariables'
 import { connectToDB } from './config/server'
 
 // activate morgan logging
@@ -21,12 +22,12 @@ connectToDB().then(async () => {
 })
 
 // set whitelist - might be temporary before other security measures are established
-const whiteList: RegExp[] = [
-  /^http:\/\/localhost:300.$/,
-  /^http:\/\/localhost:1234$/,
-  /^https:\/\/sampledomain\.netlify\.app$/,
-  /sampledomain\.netlify\.app/,
-]
+let whiteList: RegExp[] = [/^https:\/\/sample-domain\.netlify\.app$/, /sample-domain\.netlify\.app/]
+
+// allow local front ends into the server
+if (nodeEnv === 'local') {
+  whiteList = whiteList.concat([/^http:\/\/localhost:300.$/, /^http:\/\/localhost:1234$/, /^http:\/\/localhost:5173$/])
+}
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -41,14 +42,12 @@ const corsOptions = {
     if (found || !origin) {
       callback(null, true)
     } else {
-      callback(new Error('Hey So This Isnt Allowed by CORS'))
+      callback(new Error('Hey So This is not Allowed by CORS'))
     }
   },
   credentials: true,
 }
 app.use(cors(corsOptions))
-
-const port = process.env.PORT || 5001
 
 // route parsing middleware
 app.use(express.json())

@@ -1,4 +1,4 @@
-import { Schema, Document, Model, Types, model } from 'mongoose'
+import { Document, Model, Schema, Types, model } from 'mongoose'
 const schemaOptions = {
   collection: 'orgs',
   timestamps: true,

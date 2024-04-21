@@ -1,4 +1,4 @@
-import { Schema, model, Types, Document, Model } from 'mongoose'
+import { Document, Model, Schema, Types, model } from 'mongoose'
 import { OrgsDoc } from '.'
 
 /*** ENUMS ***/
